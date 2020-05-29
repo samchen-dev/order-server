@@ -6,6 +6,7 @@ import { UserModel, RoleModel } from '../db/MongoInstance'
 const router = express.Router()
 const SECRET = '### ---SINABUDDY--- ###'
 
+// 用户登陆
 router.post('/login/v1', async (req, res) => {
   console.log(req.path)
   const user = await UserModel.findOne({ username: req.body.username })
@@ -108,7 +109,7 @@ router.get('/list/v1', async (req, res) => {
     console.log("username:" + username)
     let query = null
     if(username && (username.length > 0)) {
-      query = `{username:'${username}'}`
+      query = `{username:/${username}/}`
       console.log(query)
     }
     let userList = null 
@@ -185,6 +186,49 @@ router.post('/register/v1', async (req, res) => {
       meta: {
         status: 1002,
         msg: '用户创建过程出错！'
+      }
+    })
+  }
+})
+
+// 获取用户信息
+router.get('/profile/v1', async (req, res) => {
+  console.log(req.path)
+  const _id = req.param('_id')
+  const username = req.param('username')
+  try {    
+    if (!_id) {
+      return res.send({
+        meta: {
+          status: 1001,
+          msg: '缺少必要的参数_id，无法获取用户信息！',
+        },
+      })
+    }
+    const user = await UserModel.findById(_id).populate('roles')
+    if(!user) {
+      return res.send({
+        meta: {
+          status: 1002,
+          msg: `无法获取用户：${username}的详细`,
+        },
+      })
+    }
+    res.send({
+      data:{
+        user
+      },
+      meta: {
+        status: 200,
+        msg: `成功获取用户：${username}的信息`,
+      }
+    })
+  } catch(err) {
+    console.log(err)
+    res.send({
+      meat: {
+        status: 1003,
+        msg: `在获取用户：${username}的过程中出错！`
       }
     })
   }
