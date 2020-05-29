@@ -1,0 +1,40 @@
+@url=http://localhost:3000/api
+@json=Content-Type: application/json
+
+### 清空用户表
+get {{url}}/initdata
+
+
+###  注册用户
+post {{url}}/user/register/v1
+{{json}}
+
+{
+  "username"    : "samchen",
+  "password"    : "123456",
+  "name"        : "陈辉",
+  "phone"       : "13837147910",
+  "mail"        : "samchen@sinabuddy.com",
+  "role"        : '5eccbbad253dc905e819e0f6',
+  "disableFlog" : 1
+}
+
+
+###  用户登陆
+post {{url}}/user/login/v1
+{{json}}
+
+{
+  "username" : "alanchen",
+  "password" : "123456"
+}
+
+### Role 初始化
+get {{url}}/user/initdata/v1
+
+### 用户列表
+get {{url}}/user/list/v1
+
+###  用户登陆
+get {{url}}/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzFmZmUzNTU3M2FmMzgxOGUxOGU3ZiIsImlhdCI6MTU4OTc3NTM2NH0.4DX-0m-KGtROZPJ2WYdLRtNelMJWY1_LVpHzV9Z6OXM
